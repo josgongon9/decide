@@ -1,7 +1,4 @@
-dist: xenial
 
-services:
-  - postgresql
 addons:
   postgresql: "9.4"
 before_script:
@@ -13,8 +10,10 @@ python:
   - "3.6"
 install:
   - pip install -r requirements.txt
+  - pip install codacy-coverage
 script:
-  - cd decide 
-  - cp local_settings.example.py local_settings.py
-  - python3 manage.py migrate
-  - python3 manage.py test
+  - cd decide
+  - coverage run --branch --source=. ./manage.py test --keepdb --with-xunit
+  - coverage xml
+  - python-codacy-coverage -r coverage.xml
+  
